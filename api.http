@@ -1,0 +1,19 @@
+###
+
+GET http://localhost:3000/tododb
+
+###
+
+POST http://localhost:3000/tododb
+Content-Type: application/json
+Accept: application/json
+
+{
+    "task": "Makan mie ayam 5",
+    "completed": true
+}
+
+###
+DELETE http://localhost:3000/tododb/2
+Content-Type: application/json
+Accept: application/json
