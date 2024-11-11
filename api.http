@@ -9,11 +9,21 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "task": "Makan mie ayam 5",
+    "task": "Belajar ExpressJs",
     "completed": true
 }
 
 ###
-DELETE http://localhost:3000/tododb/2
+DELETE http://localhost:3000/tododb/3
 Content-Type: application/json
 Accept: application/json
+
+###
+PUT http://localhost:3000/tododb/2
+Content-Type: application/json
+Accept: application/json
+
+{
+    "task": "Makan nasdang",
+    "completed": true
+}
