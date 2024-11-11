@@ -1,0 +1,146 @@
+<div class="container mx-auto mt-5">
+  <h1 class="text-center text-3xl font-bold">Todo List</h1>
+
+  <form id="addTodoForm" class="flex items-center my-4">
+    <input
+      type="text"
+      id="newTask"
+      class="form-control rounded-md px-3 py-2 w-full border border-gray-300 mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      placeholder="Add a new task..."
+      required
+    />
+    <button type="submit" class="btn-primary px-4 py-2 text-center">
+      Add Task
+    </button>
+  </form>
+
+  <ul id="todoList" class="list-group">
+    <% todos.forEach(todo=> { %>
+    <li
+      class="list-group-item flex items-center justify-between py-3 border-b border-gray-300"
+    >
+      <span class="<%= todo.completed ? 'line-through' : '' %>">
+        <%= todo.task %>
+      </span>
+      <div class="flex space-x-2">
+        <!-- <button
+          class="btn btn-sm btn-success px-2 py-1 text-center editBtn"
+          data-id="<%= todo.id %>"
+        >
+          Edit
+        </button> -->
+        <button data-modal-target="authentication-modal" data-modal-toggle="authentication-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+            Edit
+          </button>
+        <button
+          class="btn btn-sm btn-danger px-2 py-1 text-center deleteBtn"
+          data-id="<%= todo.id %>"
+        >
+          Delete
+        </button>
+      </div>
+    </li>
+    <% }); %>
+  </ul>
+
+  <div
+    id="editModal"
+    class="modal fade"
+    tabindex="-1"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit Todo</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="editTodoForm">
+            <div class="form-group mb-3">
+              <label for="editTask" class="form-label">Task</label>
+              <input
+                type="text"
+                id="editTask"
+                class="form-control rounded-md px-3 py-2 w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-primary px-4 py-2 text-center">
+              Save Changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Add new todo
+        $('#addTodoForm').on('submit', function (e) {
+            e.preventDefault();
+            const task = $('#newTask').val().trim();
+            if (task) {
+                $.ajax({
+                    url: '/tododb',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ task: task }),
+                    success: function (newTodo) {
+                        location.reload(); // Reload to show the new todo
+                    },
+                    error: function (error) {
+                        console.error("Error adding task:", error.responseText);
+                    }
+                });
+            }
+        });
+
+        // Delete a todo
+        $('.deleteBtn').on('click', function () {
+            const id = $(this).data('id');
+            $.ajax({
+                url: '/tododb/' + id,
+                type: 'DELETE',
+                success: function () {
+                    location.reload(); // Reload to show updated list
+                }
+            });
+        });
+
+        // Show edit modal with the current task
+        let editId;
+        $('.editBtn').on('click', function () {
+            editId = $(this).data('id');
+            const currentTask = $(this).closest('li').find('span').text();
+            $('#editTask').val(currentTask);
+            $('#editModal').modal('show');
+        });
+
+        // Update todo on form submission
+        $('#editTodoForm').on('submit', function (e) {
+            e.preventDefault();
+            const task = $('#editTask').val().trim();
+            if (task) {
+                $.ajax({
+                    url: '/tododb/' + editId,
+                    type: 'PUT',
+                    data: JSON.stringify({ task: task, completed: false }),
+                    contentType: 'application/json',
+                    success: function () {
+                        location.reload(); // Reload to show the updated todo
+                    }
+                });
+            }
+        });
+    });
+</script>
