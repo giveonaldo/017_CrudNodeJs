@@ -1,48 +1,71 @@
-require('dotenv').config();
-const express = require('express')
-const expressLayout = require('express-ejs-layouts')
-const app = express()
+require("dotenv").config();
+const express = require("express");
+const expressLayout = require("express-ejs-layouts");
+const app = express();
 const db = require("./database/db.js");
-const port = process.env.PORT
+const port = process.env.PORT;
+
+const session = require(`express-session`);
+const authRoutes = require("./routes/authRoutes");
+const { isAuthenticated } = require("./middlewares/middleware.js");
 
 app.use(expressLayout);
 app.use(express.json());
 // app.use('/todos', require('./routes/todos.js'))
-app.use('/tododb', require('./routes/tododb.js'))
-app.set('view engine', 'ejs');
+app.use("/tododb", require("./routes/tododb.js"));
+app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/", authRoutes);
+
+app.get("/login", (req, res) => {
+  res.render("login", {
+    layout: "layouts/",
+  });
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }, // Set ke true jika menggunakan HTTPS
+  })
+);
 
 // Routes to HomePage
-app.get('/', (req, res) => {
-    res.render('index', {
-        layout: 'layouts/main',
-        title: "HomePage"
-    });
+app.get("/", isAuthenticated, (req, res) => {
+  res.render("index", {
+    layout: "layouts/main",
+    title: "HomePage",
+  });
 });
 
 // Routes to Contact Us
-app.get('/contact', (req, res) => {
-    res.render('contact',{
-        layout: 'layouts/main',
-        title: "contact Page"
-    });
+app.get("/contact",isAuthenticated, (req, res) => {
+  res.render("contact", {
+    layout: "layouts/main",
+    title: "contact Page",
+  });
 });
 
-app.get('/todo-view', (req, res) => {
-    db.query('SELECT * FROM todos', (err, todos) => {
-        if (err) return res.status(500).send('Internal Server Error');
-        res.render('todo', {
-            layout: 'layouts/main',
-            todos: todos,
-            title: "Todos"
-        });
+app.get("/todo-view",isAuthenticated, (req, res) => {
+  db.query("SELECT * FROM todos", (err, todos) => {
+    if (err) return res.status(500).send("Internal Server Error");
+    res.render("todo", {
+      layout: "layouts/main",
+      todos: todos,
+      title: "Todos",
     });
+  });
 });
 
 // Routes for page not found
-app.get("/*",(req, res) => {
-    res.status(404).send('404 - Halaman tidak ditemukan.')
-})
+app.get("/*", (req, res) => {
+  res.status(404).send("404 - Halaman tidak ditemukan.");
+});
 
-app.listen(port, ()=>{
-    console.log(`Server running at http://localhost:${port}/`);
-})
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
