@@ -14,25 +14,19 @@ app.use(express.json());
 // app.use('/todos', require('./routes/todos.js'))
 app.use("/tododb", require("./routes/tododb.js"));
 app.set("view engine", "ejs");
-
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-
-app.use("/", authRoutes);
-
-app.get("/login", (req, res) => {
-  res.render("login", {
-    layout: "layouts/",
-  });
-});
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'hello',
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false }, // Set ke true jika menggunakan HTTPS
   })
 );
+
+app.use("/", authRoutes);
 
 // Routes to HomePage
 app.get("/", isAuthenticated, (req, res) => {
@@ -43,14 +37,14 @@ app.get("/", isAuthenticated, (req, res) => {
 });
 
 // Routes to Contact Us
-app.get("/contact",isAuthenticated, (req, res) => {
+app.get("/contact", (req, res) => {
   res.render("contact", {
     layout: "layouts/main",
     title: "contact Page",
   });
 });
 
-app.get("/todo-view",isAuthenticated, (req, res) => {
+app.get("/todo-view", isAuthenticated, (req, res) => {
   db.query("SELECT * FROM todos", (err, todos) => {
     if (err) return res.status(500).send("Internal Server Error");
     res.render("todo", {

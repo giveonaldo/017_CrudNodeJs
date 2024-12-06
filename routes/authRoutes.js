@@ -24,37 +24,36 @@ router.post("/signup", (req, res) => {
 // Route untuk menampilkan form signup
 router.get("/signup", (req, res) => {
   res.render("signup", {
-    layout: "layouts/main-layout",
+    layout: "layouts/main",
+    title: "Sign Up"
   });
 });
 
 // Route Login
-router.post("/login", (req, res) => {
+router.post('/login', (req, res) => {
   const { username, password } = req.body;
+  console.log(req.session.userId);
 
-  db.query(
-    "SELECT * FROM users WHERE username = ?",
-    [username],
-    (err, results) => {
-      if (err) return res.status(500).send("Error fetching user");
-      if (results.length === 0) return res.status(400).send("User not found");
+  db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+      if (err) return res.status(500).send('Error fetching user');
+      if (results.length === 0) return res.status(400).send('User not found');
 
       bcrypt.compare(password, results[0].password, (err, isMatch) => {
-        if (err) return res.status(500).send("Error checking password");
-        if (!isMatch) return res.status(401).send("Incorrect password");
+          if (err) return res.status(500).send('Error checking password');
+          if (!isMatch) return res.status(401).send('Incorrect password');
 
-        // Simpan userId dalam sesi setelah login berhasil
-        req.session.userId = results[0].id;
-        res.redirect("/"); // Arahkan ke halaman utama setelah login
-      });
-    }
-  );
+          // Simpan userId dalam sesi setelah login berhasil
+          req.session.userId = results[0].id;
+          res.redirect('/'); // Arahkan ke halaman utama setelah login
+        });
+  });
 });
 
 // Route untuk menampilkan form login
 router.get("/login", (req, res) => {
   res.render("login", {
-    layout: "layouts/main-layout",
+    layout: "layouts/main",
+    title: "Login"
   });
 });
 

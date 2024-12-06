@@ -1,0 +1,98 @@
+:root {
+    /* Signup color pallete */
+    --signup-bg-color: #FDF7F4;
+    --signup-card-color: #FCC737;
+    --signup-font-color: #1B1833;
+
+    /* Login Color pallete */
+    --login-bg-color: #FFF5D7;
+    --login-card-color: #FADA7A;
+    --login-font-color: #525B44;
+}
+
+.container {
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  background-color: var(--signup-bg-color);
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border-radius: 0 0 2rem 2rem;
+}
+
+.card {
+  width: 40%;
+  background-color: var(--login-card-color);
+  border-radius: 20px;
+  padding: 2rem;
+  color: var(--signup-font-color);
+  transition: 300ms ease-out;
+}
+
+.card:hover {
+  box-shadow: 4px 8px 25px grey;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.logo {
+    width: 5rem;
+    height: auto;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  width: 100%;
+  margin: 1rem auto;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: rgb(94, 76, 53);
+  border-radius: 10px;
+  padding: 10px 3rem;
+  margin: 2rem auto 0.5rem;
+  border: 1px solid aqua;
+  color: wheat;
+  transition: 300ms ease;
+}
+
+.btn:hover {
+  background-color: aqua;
+  border: 1px solid green;
+  color: black;
+}
+
+.form-control {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 0.5rem;
+  padding: 8px 1rem;
+}
+
+.form-label {
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.here-link {
+  color: blue;
+}
+
+.here-link:hover {
+  text-decoration: underline;
+}
