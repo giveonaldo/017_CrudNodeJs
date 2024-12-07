@@ -7,8 +7,9 @@
   <title><%= title %></title>
 </head>
 <body>
-  <%- include('./nav.ejs') %>
+  <%- include('./nav.ejs', {auth: auth}) %>
   <%- body %>
   <%- include('./footer.ejs') %>
+  <script src="/script/main.js"></script>
 </body>
 </html>

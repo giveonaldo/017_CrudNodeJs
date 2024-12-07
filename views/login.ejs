@@ -27,6 +27,9 @@
       </div>
       <button type="submit" class="btn">Login</button>
     </form>
+    <% if (message) { %>
+     <p><%= message %></p>
+    <% } %>
     <p>Belum punya akun? <a class="here-link" href="/signup">Daftar di sini</a>.</p>
   </div>
 </div>

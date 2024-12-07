@@ -33,14 +33,16 @@ app.get("/", isAuthenticated, (req, res) => {
   res.render("index", {
     layout: "layouts/main",
     title: "HomePage",
+    auth: isAuthenticated
   });
 });
 
 // Routes to Contact Us
-app.get("/contact", (req, res) => {
+app.get("/contact", isAuthenticated, (req, res) => {
   res.render("contact", {
     layout: "layouts/main",
     title: "contact Page",
+    auth: isAuthenticated
   });
 });
 
@@ -51,6 +53,7 @@ app.get("/todo-view", isAuthenticated, (req, res) => {
       layout: "layouts/main",
       todos: todos,
       title: "Todos",
+      auth: isAuthenticated
     });
   });
 });

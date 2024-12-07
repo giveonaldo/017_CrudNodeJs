@@ -6,7 +6,7 @@ const db = require("../database/db"); // Mengimpor koneksi database
 router.get("/", (req, res) => {
   db.query("SELECT * FROM todos", (err, results) => {
     if (err) return res.status(500).send("Internal Server Error");
-    res.json(results);
+    res.json(results)
   });
 });
 
