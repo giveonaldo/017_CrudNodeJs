@@ -25,25 +25,39 @@ router.get("/:id", (req, res) => {
 });
 
 // Endpoint untuk menambahkan tugas baru
-router.post("/", (req, res) => {
-  const { task, completed } = req.body;
-  if (!task || task.trim() === "") {
-    return res.status(400).send("Tugas tidak boleh kosong");
-  }
+// router.post("/add", (req, res) => {
+//   const { task, completed } = req.body;
+//   console.log(task)
+//   if (!task || task.trim() === "") {
+//     return res.status(400).send("Tugas tidak boleh kosong");
+//   }
 
-  const isCompleted = typeof completed === 'boolean' ? completed: false;
+//   const isCompleted = typeof completed === 'boolean' ? completed: false;
+
+//   db.query(
+//     "INSERT INTO todos (task, completed) VALUES (?,?) ",
+//     [task.trim(), isCompleted],
+//     (err, results) => {
+//       if (err) return res.status(500).send("Internal Server Error");
+//       const newTodo = {
+//         id: results.insertId,
+//         task: task.trim(),
+//         completed: false,
+//       };
+//       res.status(201).send("Done");
+//     }
+//   );
+// });
+
+router.post("/add", (req, res) => {
+  const { task } = req.body;
 
   db.query(
-    "INSERT INTO todos (task, completed) VALUES (?,?) ",
-    [task.trim(), isCompleted],
+    "INSERT INTO todos (task) VALUES (?) ",
+    [task],
     (err, results) => {
       if (err) return res.status(500).send("Internal Server Error");
-      const newTodo = {
-        id: results.insertId,
-        task: task.trim(),
-        completed: completed,
-      };
-      res.status(201).json(newTodo);
+      res.status(201).redirect('/')
     }
   );
 });
